@@ -249,8 +249,15 @@ Download your teasers & share everywhere!`;
     
     // Add multiple event listeners for better mobile support
     if (prefillButton) {
-    prefillButton.addEventListener('click', prefillForm);
-    prefillButton.addEventListener('touchend', prefillForm);
+    console.log('Adding prefill button listeners');
+    prefillButton.addEventListener('click', () => {
+        console.log('Prefill clicked');
+        prefillForm();
+    });
+    prefillButton.addEventListener('touchend', () => {
+        console.log('Prefill touched');
+        prefillForm();
+    });
 }
     
     
