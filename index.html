@@ -241,24 +241,10 @@ Download your teasers & share everywhere!`;
         });
 
         document.getElementById('downloadButton').addEventListener('click', downloadTeaser);
-        window.onload = function() {
-    console.log('Page loaded');
-    
-    // Get the prefill button
-    const prefillButton = document.getElementById('prefillButton');
-    
-    // Add multiple event listeners for better mobile support
-    if (prefillButton) {
-    console.log('Adding prefill button listeners');
-    prefillButton.addEventListener('click', () => {
-        console.log('Prefill clicked');
-        prefillForm();
-    });
-    prefillButton.addEventListener('touchend', () => {
-        console.log('Prefill touched');
-        prefillForm();
-    });
-}
+        document.addEventListener('DOMContentLoaded', function() {
+    console.log('DOM loaded');
+    document.getElementById('prefillButton').addEventListener('click', prefillForm);
+});
     
     
 };
