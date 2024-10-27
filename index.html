@@ -249,15 +249,11 @@ Download your teasers & share everywhere!`;
     
     // Add multiple event listeners for better mobile support
     if (prefillButton) {
-        prefillButton.addEventListener('click', handlePrefill);
-        prefillButton.addEventListener('touchend', handlePrefill);
-    }
+    prefillButton.addEventListener('click', prefillForm);
+    prefillButton.addEventListener('touchend', prefillForm);
+}
     
-    function handlePrefill(e) {
-        e.preventDefault(); // Prevent default behavior
-        console.log('Prefill triggered');
-        prefillForm();
-    }
+    
 };
     </script>
 </body>
