@@ -184,6 +184,22 @@ function startRotation() {
     if (rotationInterval) {
         clearInterval(rotationInterval);
     }
+    function loadDefaultContent() {
+    // Basic defaults that will work with current tab system
+    document.getElementById('jobTitle').value = 'Test Job';
+    document.getElementById('company').value = 'Test Company';
+    document.getElementById('logoUrl').value = 'https://via.placeholder.com/80';
+    document.getElementById('jobUrl').value = 'https://example.com';
+    document.getElementById('videoUrl').value = '';
+    document.getElementById('about').value = 'Test about section';
+    document.getElementById('responsibilities').value = 'Test responsibilities';
+    document.getElementById('requirements').value = 'Test requirements';
+    document.getElementById('benefits').value = 'Test benefits';
+
+    // Make sure to trigger preview update with proper tab rotation
+    updatePreview();
+    startRotation();
+}
     rotationInterval = setInterval(() => {
         currentTabIndex = (currentTabIndex + 1) % tabs.length;
         switchTab(tabs[currentTabIndex]);
