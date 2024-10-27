@@ -118,4 +118,103 @@
                     const videoId = extractVideoId(videoUrl);
                     contentHtml += `
                         <div id="${tab}-content" class="tab-content${index === 0 ? ' active' : ''}">
-                            <iframe width="100%" height="315" src="https://www.youtube.com/embed/${videoId}
+                            <iframe width="100%" height="315" src="https://www.youtube.com/embed/${videoId}" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+                        </div>
+                    `;
+                } else {
+                    contentHtml += `
+                        <div id="${tab}-content" class="tab-content${index === 0 ? ' active' : ''}">
+                            <p>${document.getElementById(tab).value.replace(/\n/g, '<br>')}</p>
+                        </div>
+                    `;
+                }
+            });
+            
+            tabsHtml += '</div>';
+            
+            document.getElementById('previewContent').innerHTML = `
+                <div class="job-header">
+                    <img src="${logoUrl}" alt="${company} logo" class="job-logo" crossorigin="anonymous">
+                    <div>
+                        <h2>${title}</h2>
+                        <h3>${company}</h3>
+                    </div>
+                </div>
+                ${tabsHtml}
+                ${contentHtml}
+                <a href="${jobUrl}" class="apply-button" target="_blank">Apply Now</a>
+            `;
+
+            startRotation();
+            extractAndApplyColors();
+        }
+
+        function extractAndApplyColors() {
+            const img = document.querySelector('.job-logo');
+            img.crossOrigin = 'Anonymous';
+            img.onload = function() {
+                const dominantColor = colorThief.getColor(img);
+                const preview = document.querySelector('.preview');
+                preview.style.borderColor = `rgb(${dominantColor.join(',')})`;
+                const applyButton = document.querySelector('.apply-button');
+                applyButton.style.backgroundColor = `rgb(${dominantColor.join(',')})`;
+            };
+        }
+
+        function extractVideoId(url) {
+            const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+            const match = url.match(regExp);
+            return (match && match[2].length === 11) ? match[2] : null;
+        }
+
+        function manualTabSwitch(tab) {
+            clearInterval(rotationInterval);
+            switchTab(tab);
+            rotationComplete = true;
+        }
+
+        function switchTab(tab) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            document.querySelector(`.tab:nth-child(${tabs.indexOf(tab) + 1})`).classList.add('active');
+            document.getElementById(`${tab}-content`).classList.add('active');
+        }
+
+        function startRotation() {
+            rotationInterval = setInterval(() => {
+                if (!rotationComplete) {
+                    const currentTab = tabs[currentTabIndex];
+                    switchTab(currentTab);
+                    currentTabIndex = (currentTabIndex + 1) % tabs.length;
+                    if (currentTabIndex === 0) rotationComplete = true;
+                } else {
+                    clearInterval(rotationInterval);
+                }
+            }, 3000);
+        }
+
+        function prefillForm() {
+            document.getElementById('jobTitle').value = 'Software Engineer';
+            document.getElementById('company').value = 'Tech Solutions Inc.';
+            document.getElementById('logoUrl').value = 'https://via.placeholder.com/80';
+            document.getElementById('jobUrl').value = 'https://example.com/apply';
+            document.getElementById('videoUrl').value = 'https://www.youtube.com/watch?v=dQw4w9WgXcQ';
+            document.getElementById('about').value = 'Join our innovative team to develop cutting-edge applications.';
+            document.getElementById('responsibilities').value = 'Design and implement new features for our platform.';
+            document.getElementById('requirements').value = 'Proven experience in software development.';
+            document.getElementById('benefits').value = 'Flexible working hours, health insurance.';
+            
+            updatePreview();
+        }
+
+        document.getElementById('jobForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            updatePreview();
+        });
+
+        document.getElementById('prefillButton').addEventListener('click', prefillForm);
+    </script>
+</body>
+</html>
+
+
