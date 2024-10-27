@@ -191,6 +191,16 @@ function startRotation() {
         switchTab(currentTab);
     }, 3000);
 }
+    if (rotationInterval) {
+        clearInterval(rotationInterval);
+    }
+    
+    rotationInterval = setInterval(() => {
+        currentTabIndex = (currentTabIndex + 1) % tabs.length;
+        const currentTab = tabs[currentTabIndex];
+        switchTab(currentTab);
+    }, 3000);
+}
 function prefillForm() {
     document.getElementById('jobTitle').value = 'Create Free Job Teasers Now';
     document.getElementById('company').value = 'For Recruiters & Hiring Managers';
