@@ -166,6 +166,31 @@
             const match = url.match(regExp);
             return (match && match[2].length === 11) ? match[2] : null;
         }
+        function manualTabSwitch(tab) {
+    clearInterval(rotationInterval);
+    switchTab(tab);
+    rotationComplete = false;
+    startRotation();
+}
+
+function switchTab(tab) {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+    document.querySelector(`.tab:nth-child(${tabs.indexOf(tab) + 1})`).classList.add('active');
+    document.getElementById(`${tab}-content`).classList.add('active');
+}
+
+function startRotation() {
+    if (rotationInterval) {
+        clearInterval(rotationInterval);
+    }
+    
+    rotationInterval = setInterval(() => {
+        currentTabIndex = (currentTabIndex + 1) % tabs.length;
+        const currentTab = tabs[currentTabIndex];
+        switchTab(currentTab);
+    }, 3000);
+}
 function prefillForm() {
     document.getElementById('jobTitle').value = 'Create Free Job Teasers Now';
     document.getElementById('company').value = 'For Recruiters & Hiring Managers';
