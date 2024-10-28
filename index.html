@@ -203,13 +203,34 @@ async startRecording() {
         
         // Cleanup
         this.chunks = [];
-        this.stream = null;
-        this.recorder = null;
+this.recorder = null;
     }
+
+    async startRecording() {
+        let tabIndex = 0;
+        const tabInterval = setInterval(() => {
+            if (tabIndex >= tabs.length) {
+                clearInterval(tabInterval);
+                setTimeout(() => this.recorder.stop(), 1000);
+                return;
+            }
+            
+            // Update progress
+            const progress = Math.round((tabIndex / tabs.length) * 100);
+            document.querySelector('.recording-progress').textContent = `${progress}%`;
+            
+            // Switch tab and render frame
+            switchTab(tabs[tabIndex]);
+            this.renderFrame(preview);
+            tabIndex++;
+        }, 3000); // 3 seconds per tab
+    }
+}
+
 // Initialize recorder
 const linkedInRecorder = new LinkedInTeaserRecorder();
 
-        function updatePreview() {
+function updatePreview() {
             const title = document.getElementById('jobTitle').value;
             const company = document.getElementById('company').value;
             const logoUrl = document.getElementById('logoUrl').value;
@@ -324,7 +345,7 @@ function prefillForm() {
     document.getElementById('jobTitle').value = 'Create Free Job Teasers Now';
     document.getElementById('company').value = 'For Recruiters & Hiring Managers';
     document.getElementById('logoUrl').value = 'https://i.ibb.co/NWxR3hk/IMG-1458.jpg';
-    document.getElementById('jobUrl').value = '#download-teaser';
+    document.getElementById('downloadButton').addEventListener('click', () => linkedInRecorder.startRecording());
     document.getElementById('videoUrl').value = 'https://youtu.be/rlMFOh2xtik?si=HYktBfvNjnlOgOVt';
     
     document.getElementById('about').value = 
