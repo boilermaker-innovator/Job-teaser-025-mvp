@@ -28,6 +28,35 @@ function stopRecording() {
         console.warn("No active recording found");
     }
 }
+    function startRecording() {
+    if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+        navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
+            window.audioStream = stream;
+            window.mediaRecorder = new MediaRecorder(stream);
+            window.mediaRecorder.start();
+            console.log("Recording started");
+        }).catch(error => console.error("Recording error:", error));
+    } else {
+        console.warn("getUserMedia not supported on this browser.");
+    }
+    function saveRecording() {
+    if (window.mediaRecorder && window.mediaRecorder.state === "inactive") {
+        window.mediaRecorder.ondataavailable = function(event) {
+            const audioURL = URL.createObjectURL(event.data);
+            const downloadLink = document.createElement("a");
+            downloadLink.href = audioURL;
+            downloadLink.download = "recording.wav";
+            downloadLink.click();
+            console.log("Recording saved");
+        };
+    } else {
+        console.warn("No recording available to save");
+    }
+}
+    document.getElementById("startButton").addEventListener("click", startRecording);
+document.getElementById("stopButton").addEventListener("click", stopRecording);
+document.getElementById("saveButton").addEventListener("click", saveRecording);
+
 
 <meta property="twitter:card" content="summary_large_image">
 <meta property="twitter:url" content="https://boilermaker-innovator.github.io/job-teaser-023-mvp/">
