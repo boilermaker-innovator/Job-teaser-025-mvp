@@ -119,39 +119,32 @@ class LinkedInTeaserRecorder {
         };
     }
 }
-async startRecording() {
-        const overlay = document.querySelector('.recording-overlay');
-        const preview = document.querySelector('.preview');
-        
-        overlay.style.display = 'flex';
+// Code Block 1: Start Recording
+async function startRecording() {
+    try {
+        // Request access to the user's microphone
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        const mediaRecorder = new MediaRecorder(stream);
 
-        // Initialize canvas
-        this.canvas = document.createElement('canvas');
-        this.canvas.width = this.dimensions.width;
-        this.canvas.height = this.dimensions.height;
-        this.ctx = this.canvas.getContext('2d');
+        // When data becomes available, it triggers the `dataavailable` event
+        let audioChunks = [];
+        mediaRecorder.ondataavailable = event => {
+            audioChunks.push(event.data);
+        };
 
-        // Setup recording
-        this.stream = this.canvas.captureStream(30);
-        this.recorder = new MediaRecorder(this.stream, {
-            mimeType: 'video/webm;codecs=vp9',
-            videoBitsPerSecond: 8000000 // High quality for LinkedIn
-        });
+        // Start recording
+        mediaRecorder.start();
+        console.log("Recording started");
 
-        this.chunks = [];
-        this.recorder.ondataavailable = (e) => this.chunks.push(e.data);
-        this.recorder.onstop = () => this.finalizeRecording();
+        // Save recorder and chunks for later use
+        window.audioStream = stream;
+        window.mediaRecorder = mediaRecorder;
+        window.audioChunks = audioChunks;
+    } catch (error) {
+        console.error("Could not start recording:", error);
+    }
+}
 
-        // Start recording process
-        this.recorder.start();
-        
-        // Run through tabs once
-        let tabIndex = 0;
-        const tabInterval = setInterval(() => {
-            if (tabIndex >= tabs.length) {
-                clearInterval(tabInterval);
-                setTimeout(() => this.recorder.stop(), 1000);
-                return;
             }
             
             // Update progress
