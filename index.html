@@ -16,7 +16,19 @@
 <meta property="og:site_name" content="Job Teaser Creator">
 <meta property="og:locale" content="en_US">
 
-<!-- Twitter -->
+<!-- Twitter -->// Code Block 2: Stop Recording
+function stopRecording() {
+    if (window.mediaRecorder && window.mediaRecorder.state !== "inactive") {
+        window.mediaRecorder.stop();
+        console.log("Recording stopped");
+
+        // Stop microphone access
+        window.audioStream.getTracks().forEach(track => track.stop());
+    } else {
+        console.warn("No active recording found");
+    }
+}
+
 <meta property="twitter:card" content="summary_large_image">
 <meta property="twitter:url" content="https://boilermaker-innovator.github.io/job-teaser-023-mvp/">
 <meta property="twitter:title" content="Job Teaser Creator - Dynamic Colors">
@@ -49,7 +61,7 @@
         .tab { padding: 12px 16px; cursor: pointer; background: #ffffff; border: none; margin-right: 2px; border-radius: 4px 4px 0 0; transition: background-color 0.3s; font-weight: 600; color: #0077B5; }
         .tab.active { background: #0077B5; color: white; }
         .tab-content { display: none; padding: 16px; border: 1px solid #e0e0e0; border-top: none; }
-        .tab-content.active { display: block; }
+        .tab-content.active { display: block; 
         .job-header { display: flex; align-items: center; margin-bottom: 20px; }
         .job-logo { width: 120px; height: 120px; object-fit: contain; margin-right: 20px; border: 1px solid #e0e0e0; border-radius: 4px; }
         .apply-button { display: block; width: 100%; padding: 12px; background-color: #0077B5; color: white; text-align: center; text-decoration: none; margin-top: 20px; border-radius: 24px; transition: background-color 0.3s; font-weight: 600; font-size: 16px; }
