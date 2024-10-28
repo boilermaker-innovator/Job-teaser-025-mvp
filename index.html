@@ -85,15 +85,127 @@
             <div class="preview">
                 <div id="previewContent"></div>
             </div>
-        </div>
     </div>
+    </div>
+</div>
 
-    <script>
-        const colorThief = new ColorThief();
-        let tabs = ['about', 'responsibilities', 'requirements', 'benefits'];
-        let currentTabIndex = 0;
-        let rotationInterval;
-        let rotationComplete = false;
+<div class="recording-overlay">
+    <div class="recording-status">
+        <div class="recording-indicator"></div>
+        <p>Creating LinkedIn Video</p>
+        <p class="recording-progress">0%</p>
+    </div>
+</div>
+
+const colorThief = new ColorThief();
+let tabs = ['about', 'responsibilities', 'requirements', 'benefits'];
+let currentTabIndex = 0;
+let rotationInterval;
+let rotationComplete = false;
+
+class LinkedInTeaserRecorder {
+    constructor() {
+        this.chunks = [];
+        this.recorder = null;
+        this.stream = null;
+        this.canvas = null;
+        this.ctx = null;
+        // LinkedIn mobile-optimized dimensions (9:16 aspect ratio)
+        this.dimensions = {
+            width: 1080,
+            height: 1920
+        };
+    }
+}
+async startRecording() {
+        const overlay = document.querySelector('.recording-overlay');
+        const preview = document.querySelector('.preview');
+        
+        overlay.style.display = 'flex';
+
+        // Initialize canvas
+        this.canvas = document.createElement('canvas');
+        this.canvas.width = this.dimensions.width;
+        this.canvas.height = this.dimensions.height;
+        this.ctx = this.canvas.getContext('2d');
+
+        // Setup recording
+        this.stream = this.canvas.captureStream(30);
+        this.recorder = new MediaRecorder(this.stream, {
+            mimeType: 'video/webm;codecs=vp9',
+            videoBitsPerSecond: 8000000 // High quality for LinkedIn
+        });
+
+        this.chunks = [];
+        this.recorder.ondataavailable = (e) => this.chunks.push(e.data);
+        this.recorder.onstop = () => this.finalizeRecording();
+
+        // Start recording process
+        this.recorder.start();
+        
+        // Run through tabs once
+        let tabIndex = 0;
+        const tabInterval = setInterval(() => {
+            if (tabIndex >= tabs.length) {
+                clearInterval(tabInterval);
+                setTimeout(() => this.recorder.stop(), 1000);
+                return;
+            }
+            
+            // Update progress
+            const progress = Math.round((tabIndex / tabs.length) * 100);
+            document.querySelector('.recording-progress').textContent = `${progress}%`;
+            
+            // Switch tab and render frame
+            switchTab(tabs[tabIndex]);
+            this.renderFrame(preview);
+            tabIndex++;
+        }, 3000); // 3 seconds per tab
+    }
+
+    async renderFrame(element) {
+        // Calculate scaling to fit content properly in 9:16 format
+        const scale = Math.min(
+            this.dimensions.width / element.offsetWidth,
+            this.dimensions.height / element.offsetHeight
+        ) * 0.9; // 90% of max size to ensure margins
+
+        const result = await html2canvas(element, {
+            scale: scale,
+            logging: false,
+            useCORS: true,
+            backgroundColor: '#f3f2ef' // LinkedIn-style background
+        });
+
+        // Clear canvas and center content
+        this.ctx.fillStyle = '#f3f2ef';
+        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+        
+        const x = (this.canvas.width - result.width) / 2;
+        const y = (this.canvas.height - result.height) / 2;
+        
+        this.ctx.drawImage(result, x, y);
+    }
+
+    async finalizeRecording() {
+        const blob = new Blob(this.chunks, { type: 'video/webm' });
+        const url = URL.createObjectURL(blob);
+        
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'linkedin-job-teaser.webm';
+        a.click();
+        
+        URL.revokeObjectURL(url);
+        document.querySelector('.recording-overlay').style.display = 'none';
+        
+        // Cleanup
+        this.chunks = [];
+        this.stream = null;
+        this.recorder = null;
+    }
+// Initialize recorder
+const linkedInRecorder = new LinkedInTeaserRecorder();
 
         function updatePreview() {
             const title = document.getElementById('jobTitle').value;
