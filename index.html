@@ -1,441 +1,265 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <!-- Basic Meta Tags -->
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="Create dynamic job teasers with customizable previews, embedded videos, and color-enhanced themes for effective job postings.">
-<meta name="author" content="Boilermaker Innovator">
+import { useState, useEffect } from 'react';
+import { Pencil, Upload } from 'lucide-react';
 
-<!-- Open Graph / Facebook -->
-<meta property="og:type" content="website">
-<meta property="og:url" content="https://boilermaker-innovator.github.io/job-teaser-023-mvp/">
-<meta property="og:title" content="Job Teaser Creator - Dynamic Colors">
-<meta property="og:description" content="Create dynamic job teasers with customizable previews, embedded videos, and color-enhanced themes for effective job postings.">
-<meta property="og:image" content="https://i.ibb.co/8j0Zc9W/IMG-1435.jpg">
-<meta property="og:site_name" content="Job Teaser Creator">
-<meta property="og:locale" content="en_US">
+const ContentTeaser = () => {
+  const [activeTab, setActiveTab] = useState(0);
+  const [hasLooped, setHasLooped] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [formData, setFormData] = useState({
+    logoUrl: "https://i.ibb.co/K6YSxr4/logo.png",
+    title: "Share Stories Better ✨",
+    tagline: "Interactive content that captures attention",
+    tabs: [
+      {
+        label: "💡 Problem",
+        heading: "Content Gets Lost",
+        content: "93% of social media updates go unnoticed. In today's fast-paced digital world, great stories struggle to find their audience."
+      },
+      {
+        label: "✨ Solution",
+        heading: "Make Content Interactive",
+        content: "Transform your content into engaging, interactive experiences that guide viewers through your story."
+      },
+      {
+        label: "🎯 Impact",
+        heading: "See Real Results",
+        content: "Users report 3x higher engagement rates. From product launches to job postings, help content break through the noise."
+      },
+      {
+        label: "🎬 Demo",
+        heading: "Watch It in Action",
+        content: "See how easy it is to transform your content into an engaging story that captures attention.",
+        demoUrl: "https://i.ibb.co/K6YSxr4/demo.gif"
+      }
+    ]
+  });
 
-<!-- Twitter -->// Code Block 2: Stop Recording
-function stopRecording() {
-    if (window.mediaRecorder && window.mediaRecorder.state !== "inactive") {
-        window.mediaRecorder.stop();
-        console.log("Recording stopped");
-
-        // Stop microphone access
-        window.audioStream.getTracks().forEach(track => track.stop());
-    } else {
-        console.warn("No active recording found");
+  useEffect(() => {
+    let interval;
+    if (!isEditing && !hasLooped) {
+      interval = setInterval(() => {
+        setActiveTab(prev => {
+          const next = (prev + 1) % formData.tabs.length;
+          if (next === 0) setHasLooped(true);
+          return next;
+        });
+      }, 4000);
     }
-}
-    function startRecording() {
-    if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-        navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
-            window.audioStream = stream;
-            window.mediaRecorder = new MediaRecorder(stream);
-            window.mediaRecorder.start();
-            console.log("Recording started");
-        }).catch(error => console.error("Recording error:", error));
-    } else {
-        console.warn("getUserMedia not supported on this browser.");
-    }
-    function saveRecording() {
-    if (window.mediaRecorder && window.mediaRecorder.state === "inactive") {
-        window.mediaRecorder.ondataavailable = function(event) {
-            const audioURL = URL.createObjectURL(event.data);
-            const downloadLink = document.createElement("a");
-            downloadLink.href = audioURL;
-            downloadLink.download = "recording.wav";
-            downloadLink.click();
-            console.log("Recording saved");
-        };
-    } else {
-        console.warn("No recording available to save");
-    }
-}
-    document.getElementById("startButton").addEventListener("click", startRecording);
-document.getElementById("stopButton").addEventListener("click", stopRecording);
-document.getElementById("saveButton").addEventListener("click", saveRecording);
+    return () => clearInterval(interval);
+  }, [hasLooped, isEditing, formData.tabs.length]);
 
-
-<meta property="twitter:card" content="summary_large_image">
-<meta property="twitter:url" content="https://boilermaker-innovator.github.io/job-teaser-023-mvp/">
-<meta property="twitter:title" content="Job Teaser Creator - Dynamic Colors">
-<meta property="twitter:description" content="Create dynamic job teasers with customizable previews, embedded videos, and color-enhanced themes for effective job postings.">
-<meta property="twitter:image" content="https://i.ibb.co/M2xFnxM/IMG-1355.jpg">
-
-<!-- Canonical -->
-<link rel="canonical" href="https://boilermaker-innovator.github.io/job-teaser-023-mvp/">
-
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Job Teaser Creator - Dynamic Colors</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/color-thief/2.3.0/color-thief.umd.js"></script>
-    <style>
-        body { font-family: -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", "Fira Sans", Ubuntu, Oxygen, "Oxygen Sans", Cantarell, "Droid Sans", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Lucida Grande", Helvetica, Arial, sans-serif; line-height: 1.6; margin: 0; padding: 0; background-color: #f3f2ef; }
-        .header { background-color: #0077B5; color: white; padding: 20px 0; text-align: center; }
-        .container { max-width: 1200px; margin: 0 auto; padding: 20px; display: flex; flex-wrap: wrap; }
-        .form-container { background-color: #ffffff; padding: 24px; border-radius: 8px; margin-bottom: 20px; box-shadow: 0 0 0 1px rgba(0,0,0,0.15), 0 2px 3px rgba(0,0,0,0.2); flex: 1 1 500px; margin-right: 20px; }
-        .preview-container { flex: 1 1 500px; }
-        h1 { margin: 0; font-size: 24px; font-weight: 600; }
-        h2 { color: #0077B5; font-size: 20px; font-weight: 600; }
-        input, textarea { width: 100%; margin-bottom: 16px; padding: 8px; border: 1px solid #0077B5; border-radius: 4px; box-sizing: border-box; font-size: 14px; }
-        textarea { height: 100px; resize: vertical; }
-        .button-container { display: flex; justify-content: space-between; margin-top: 20px; }
-        button { padding: 10px 24px; background-color: #0077B5; color: white; border: none; border-radius: 24px; cursor: pointer; transition: background-color 0.3s; font-weight: 600; font-size: 16px; }
-        button:hover { background-color: #006097; }
-        .preview { background-color: #e6f3ff; border: 3px solid #0077B5; padding: 24px; border-radius: 8px; box-shadow: 0 0 1px rgba(0,0,0,0.15), 0 2px 3px rgba(0,0,0,0.2); }
-        .preview-title { margin-bottom: 16px; font-size: 18px; font-weight: 600; color: #0077B5; }
-        .tab-container { display: flex; background-color: #f3f2ef; border-bottom: 1px solid #e0e0e0; }
-        .tab { padding: 12px 16px; cursor: pointer; background: #ffffff; border: none; margin-right: 2px; border-radius: 4px 4px 0 0; transition: background-color 0.3s; font-weight: 600; color: #0077B5; }
-        .tab.active { background: #0077B5; color: white; }
-        .tab-content { display: none; padding: 16px; border: 1px solid #e0e0e0; border-top: none; }
-        .tab-content.active { display: block; 
-        .job-header { display: flex; align-items: center; margin-bottom: 20px; }
-        .job-logo { width: 120px; height: 120px; object-fit: contain; margin-right: 20px; border: 1px solid #e0e0e0; border-radius: 4px; }
-        .apply-button { display: block; width: 100%; padding: 12px; background-color: #0077B5; color: white; text-align: center; text-decoration: none; margin-top: 20px; border-radius: 24px; transition: background-color 0.3s; font-weight: 600; font-size: 16px; }
-        .apply-button:hover { background-color: #006097; }
-    </style>
-</head>
-<body onload="prefillForm()">
-    <div class="header">
-        <h1>Job Teaser Creator</h1>
-    </div>
-    <div class="container">
-        <div class="form-container">
-            <h2>Create Your Job Teaser</h2>
-            <form id="jobForm">
-                <input type="text" id="jobTitle" placeholder="Job Title" required>
-                <input type="text" id="company" placeholder="Company Name" required>
-                <input type="url" id="logoUrl" placeholder="Company Logo URL" required>
-                <input type="url" id="jobUrl" placeholder="Job Application URL" required>
-                <input type="url" id="videoUrl" placeholder="YouTube Video URL (optional)">
-                <textarea id="about" placeholder="About the job" required></textarea>
-                <textarea id="responsibilities" placeholder="Responsibilities" required></textarea>
-                <textarea id="requirements" placeholder="Requirements" required></textarea>
-                <textarea id="benefits" placeholder="Benefits" required></textarea>
-                <div class="button-container">
-    <button type="submit">Update Preview</button>
-    <button type="button" id="prefillButton">Prefill Form</button>
-    <button type="button" id="downloadButton">Download Teaser</button>
-</div>
-            </form>
-        </div>
-        <div class="preview-container">
-            <h2 class="preview-title">Job Teaser Preview</h2>
-            <div class="preview">
-                <div id="previewContent"></div>
-            </div>
-    </div>
-    </div>
-</div>
-
-<div class="recording-overlay">
-    <div class="recording-status">
-        <div class="recording-indicator"></div>
-        <p>Creating LinkedIn Video</p>
-        <p class="recording-progress">0%</p>
-  </div>
-</div>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-<script>
-const colorThief = new ColorThief();
-let tabs = ['about', 'responsibilities', 'requirements', 'benefits'];
-let currentTabIndex = 0;
-let rotationInterval;
-let rotationComplete = false;
-
-class LinkedInTeaserRecorder {
-    constructor() {
-        this.chunks = [];
-        this.recorder = null;
-        this.stream = null;
-        this.canvas = null;
-        this.ctx = null;
-        // LinkedIn mobile-optimized dimensions (9:16 aspect ratio)
-        this.dimensions = {
-            width: 1080,
-            height: 1920
-        };
-    }
-}
-// Code Block 1: Start Recording
-async function startRecording() {
+  const uploadImage = async (file, field) => {
     try {
-        // Request access to the user's microphone
-        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-        const mediaRecorder = new MediaRecorder(stream);
+      const formData = new FormData();
+      formData.append('image', file);
+      
+      const response = await fetch(`https://api.imgbb.com/1/upload?key=59cd5b2935b5b01bc744b5b0a1d26ee0`, {
+        method: 'POST',
+        body: formData
+      });
 
-        // When data becomes available, it triggers the `dataavailable` event
-        let audioChunks = [];
-        mediaRecorder.ondataavailable = event => {
-            audioChunks.push(event.data);
-        };
-
-        // Start recording
-        mediaRecorder.start();
-        console.log("Recording started");
-
-        // Save recorder and chunks for later use
-        window.audioStream = stream;
-        window.mediaRecorder = mediaRecorder;
-        window.audioChunks = audioChunks;
+      const data = await response.json();
+      if (data.success) {
+        setFormData(prev => ({
+          ...prev,
+          [field]: data.data.url
+        }));
+        return true;
+      }
+      return false;
     } catch (error) {
-        console.error("Could not start recording:", error);
+      console.error('Upload failed:', error);
+      return false;
     }
-}
+  };
 
-            }
-            
-            // Update progress
-            const progress = Math.round((tabIndex / tabs.length) * 100);
-            document.querySelector('.recording-progress').textContent = `${progress}%`;
-            
-            // Switch tab and render frame
-            switchTab(tabs[tabIndex]);
-            this.renderFrame(preview);
-            tabIndex++;
-        }, 3000); // 3 seconds per tab
-    }
-
-    async renderFrame(element) {
-        // Calculate scaling to fit content properly in 9:16 format
-        const scale = Math.min(
-            this.dimensions.width / element.offsetWidth,
-            this.dimensions.height / element.offsetHeight
-        ) * 0.9; // 90% of max size to ensure margins
-
-        const result = await html2canvas(element, {
-            scale: scale,
-            logging: false,
-            useCORS: true,
-            backgroundColor: '#f3f2ef' // LinkedIn-style background
-        });
-
-        // Clear canvas and center content
-        this.ctx.fillStyle = '#f3f2ef';
-        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
-        
-        const x = (this.canvas.width - result.width) / 2;
-        const y = (this.canvas.height - result.height) / 2;
-        
-        this.ctx.drawImage(result, x, y);
-    }
-
-    async finalizeRecording() {
-        const blob = new Blob(this.chunks, { type: 'video/webm' });
-        const url = URL.createObjectURL(blob);
-        
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = 'linkedin-job-teaser.webm';
-        a.click();
-        
-        URL.revokeObjectURL(url);
-        document.querySelector('.recording-overlay').style.display = 'none';
-        
-        // Cleanup
-        this.chunks = [];
-this.recorder = null;}
-
-    async startRecording() {
-        let tabIndex = 0;
-        const tabInterval = setInterval(() => {
-            if (tabIndex >= tabs.length) {
-                clearInterval(tabInterval);
-                setTimeout(() => this.recorder.stop(), 1000);
-                return;
-            }
-            
-            // Update progress
-            const progress = Math.round((tabIndex / tabs.length) * 100);
-            document.querySelector('.recording-progress').textContent = `${progress}%`;
-            
-            // Switch tab and render frame
-            switchTab(tabs[tabIndex]);
-            this.renderFrame(preview);
-            tabIndex++;
-        }, 3000); // 3 seconds per tab
-    }
-}
-
-// Initialize recorder
-const linkedInRecorder = new LinkedInTeaserRecorder();
-
-function updatePreview() {
-            const title = document.getElementById('jobTitle').value;
-            const company = document.getElementById('company').value;
-            const logoUrl = document.getElementById('logoUrl').value;
-            const jobUrl = document.getElementById('jobUrl').value;
-            const videoUrl = document.getElementById('videoUrl').value;
-            
-            // Reset tabs and rotation state
-            tabs = ['about', 'responsibilities', 'requirements', 'benefits'];
-            if (videoUrl.trim() !== '') {
-                tabs.push('video');
-            }
-            currentTabIndex = 0;
-            rotationComplete = false;
-            
-            let tabsHtml = '<div class="tab-container">';
-            let contentHtml = '';
-            
-            tabs.forEach((tab, index) => {
-                tabsHtml += `<div class="tab${index === 0 ? ' active' : ''}" onclick="manualTabSwitch('${tab}')">${tab.charAt(0).toUpperCase() + tab.slice(1)}</div>`;
-                if (tab === 'video') {
-                    const videoId = extractVideoId(videoUrl);
-                    contentHtml += `
-                        <div id="${tab}-content" class="tab-content${index === 0 ? ' active' : ''}">
-                            <iframe width="100%" height="315" src="https://www.youtube.com/embed/${videoId}" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
-                        </div>
-                    `;
+  const renderImageUpload = (field, label) => (
+    <div className="mb-4">
+      <label className="block text-sm font-medium text-gray-700 mb-1">{label}</label>
+      <div className="flex gap-2 items-center">
+        <input
+          type="text"
+          value={formData[field]}
+          readOnly
+          className="flex-1 p-2 border rounded bg-gray-50"
+        />
+        <label className="cursor-pointer">
+          <input
+            type="file"
+            accept="image/*"
+            className="hidden"
+            onChange={async (e) => {
+              const file = e.target.files?.[0];
+              if (file) {
+                const success = await uploadImage(file, field);
+                if (success) {
+                  alert('Upload successful!');
                 } else {
-                    contentHtml += `
-                        <div id="${tab}-content" class="tab-content${index === 0 ? ' active' : ''}">
-                            <p>${document.getElementById(tab).value.replace(/\n/g, '<br>')}</p>
-                        </div>
-                    `;
+                  alert('Upload failed. Please try again.');
                 }
-            });
-            
-            tabsHtml += '</div>';
-            
-            document.getElementById('previewContent').innerHTML = `
-                <div class="job-header">
-                    <img src="${logoUrl}" alt="${company} logo" class="job-logo" crossorigin="anonymous">
-                    <div>
-                        <h2>${title}</h2>
-                        <h3>${company}</h3>
-                    </div>
+              }
+            }}
+          />
+          <div className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition-colors">
+            <Upload size={16} />
+            Upload
+          </div>
+        </label>
+      </div>
+      {formData[field] && (
+        <img 
+          src={formData[field]} 
+          alt={label}
+          className="mt-2 h-20 object-contain rounded border p-1"
+        />
+      )}
+    </div>
+  );
+
+  return (
+    <div className="max-w-2xl mx-auto p-4">
+      <div className="border-2 border-green-600 rounded-lg overflow-hidden bg-white">
+        <div className="bg-green-600 p-4">
+          <div className="flex justify-between items-start">
+            <div className="flex items-center gap-4">
+              {formData.logoUrl ? (
+                <img 
+                  src={formData.logoUrl} 
+                  alt="Logo"
+                  className="w-16 h-16 bg-white rounded-lg p-2 object-contain"
+                />
+              ) : (
+                <div className="w-16 h-16 bg-white rounded-lg p-2 flex items-center justify-center">
+                  Logo
                 </div>
-                ${tabsHtml}
-                ${contentHtml}
-                <a href="${jobUrl}" class="apply-button" target="_blank">Apply Now</a>
-            `;
+              )}
+              <div>
+                <h1 className="text-white text-xl font-bold m-0">{formData.title}</h1>
+                <p className="text-white/90 text-sm m-0">{formData.tagline}</p>
+              </div>
+            </div>
+            
+            <button
+              onClick={() => setIsEditing(!isEditing)}
+              className="flex items-center gap-2 px-4 py-2 bg-white text-green-600 rounded-full hover:bg-green-50 transition-colors"
+            >
+              <Pencil size={16} />
+              {isEditing ? 'Preview' : 'Edit'} ✏️
+            </button>
+          </div>
+        </div>
 
-            startRotation();
-            extractAndApplyColors();
-        }
+        {isEditing ? (
+          <div className="p-6">
+            <div className="space-y-4">
+              {renderImageUpload('logoUrl', 'Logo Image')}
+              
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Title</label>
+                <input
+                  type="text"
+                  value={formData.title}
+                  onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
+                  className="w-full p-2 border rounded"
+                />
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Tagline</label>
+                <input
+                  type="text"
+                  value={formData.tagline}
+                  onChange={(e) => setFormData(prev => ({ ...prev, tagline: e.target.value }))}
+                  className="w-full p-2 border rounded"
+                />
+              </div>
 
-        function extractAndApplyColors() {
-            const img = document.querySelector('.job-logo');
-            img.crossOrigin = 'Anonymous';
-            img.onload = function() {
-                const dominantColor = colorThief.getColor(img);
-                const preview = document.querySelector('.preview');
-                preview.style.borderColor = `rgb(${dominantColor.join(',')})`;
-                const applyButton = document.querySelector('.apply-button');
-            };
-        }
+              {formData.tabs.map((tab, index) => (
+                <div key={index} className="border-t pt-4">
+                  <h3 className="font-medium mb-2">{tab.label}</h3>
+                  <div className="space-y-2">
+                    <input
+                      type="text"
+                      value={tab.heading}
+                      onChange={(e) => {
+                        const newTabs = [...formData.tabs];
+                        newTabs[index].heading = e.target.value;
+                        setFormData(prev => ({ ...prev, tabs: newTabs }));
+                      }}
+                      className="w-full p-2 border rounded"
+                      placeholder="Heading"
+                    />
+                    <textarea
+                      value={tab.content}
+                      onChange={(e) => {
+                        const newTabs = [...formData.tabs];
+                        newTabs[index].content = e.target.value;
+                        setFormData(prev => ({ ...prev, tabs: newTabs }));
+                      }}
+                      className="w-full p-2 border rounded"
+                      rows={3}
+                      placeholder="Content"
+                    />
+                    {index === 3 && renderImageUpload('demoUrl', 'Demo GIF/Image')}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        ) : (
+          <>
+            <div className="flex h-1">
+              {formData.tabs.map((_, index) => (
+                <div
+                  key={index}
+                  className={`flex-1 transition-colors duration-300 ${
+                    index === activeTab ? 'bg-green-600' : 'bg-gray-200'
+                  }`}
+                />
+              ))}
+            </div>
 
-        function extractVideoId(url) {
-            const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
-            const match = url.match(regExp);
-            return (match && match[2].length === 11) ? match[2] : null;
-        }
-        function manualTabSwitch(tab) {
-    clearInterval(rotationInterval);
-    switchTab(tab);
-    rotationComplete = false;
-    startRotation();
-}
+            <div className="flex border-b">
+              {formData.tabs.map((tab, index) => (
+                <button
+                  key={index}
+                  onClick={() => setActiveTab(index)}
+                  className={`flex-1 py-3 px-4 transition-colors duration-300 ${
+                    index === activeTab 
+                      ? 'text-green-600 border-b-2 border-green-600' 
+                      : 'text-gray-600 hover:bg-gray-50'
+                  }`}
+                >
+                  {tab.label}
+                </button>
+              ))}
+            </div>
 
-function switchTab(tab) {
-    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-    document.querySelector(`.tab:nth-child(${tabs.indexOf(tab) + 1})`).classList.add('active');
-    document.getElementById(`${tab}-content`).classList.add('active');
-}
+            <div className="p-6 min-h-[300px]">
+              <div className="text-center">
+                <h2 className="text-xl font-bold mb-4">
+                  {formData.tabs[activeTab].heading}
+                </h2>
+                <p className="mb-6 text-gray-600">
+                  {formData.tabs[activeTab].content}
+                </p>
+                
+                {activeTab === 3 && formData.tabs[3].demoUrl && (
+                  <div className="mt-4">
+                    <img 
+                      src={formData.tabs[3].demoUrl}
+                      alt="Demo"
+                      className="w-full max-h-[400px] object-contain rounded-lg"
+                    />
+                  </div>
+                )}
+              </div>
+            </div>
+          </>
+        )}
+      </div>
+    </div>
+  );
+};
 
-function startRotation() {
-    if (rotationInterval) {
-        clearInterval(rotationInterval);
-    }
-    function loadDefaultContent() {
-    // Basic defaults that will work with current tab system
-    document.getElementById('jobTitle').value = 'Test Job';
-    document.getElementById('company').value = 'Test Company';
-    document.getElementById('logoUrl').value = 'https://via.placeholder.com/80';
-    document.getElementById('jobUrl').value = 'https://example.com';
-    document.getElementById('videoUrl').value = '';
-    document.getElementById('about').value = 'Test about section';
-    document.getElementById('responsibilities').value = 'Test responsibilities';
-    document.getElementById('requirements').value = 'Test requirements';
-    document.getElementById('benefits').value = 'Test benefits';
-
-    // Make sure to trigger preview update with proper tab rotation
-    updatePreview();
-    startRotation();
-}
-    rotationInterval = setInterval(() => {
-        currentTabIndex = (currentTabIndex + 1) % tabs.length;
-        switchTab(tabs[currentTabIndex]);
-    }, 5000); // Changed to 5 seconds for better readability
-}
-    
-function prefillForm() {
-    document.getElementById('jobTitle').value = 'Create Free Job Teasers Now';
-    document.getElementById('company').value = 'For Recruiters & Hiring Managers';
-    document.getElementById('logoUrl').value = 'https://i.ibb.co/NWxR3hk/IMG-1458.jpg';
-    document.getElementById('downloadButton').addEventListener('click', () => linkedInRecorder.startRecording());
-    document.getElementById('videoUrl').value = 'https://youtu.be/rlMFOh2xtik?si=HYktBfvNjnlOgOVt';
-    
-    document.getElementById('about').value = 
-`🚀 Free Tool for Modern Recruiters!
-Create eye-catching job teasers for your existing job posts. 
-✨ No account needed
-💾 Saves locally to your device
-🎯 Use with any job site`;
-    document.getElementById('responsibilities').value = 
-`Why Use Job Teasers?
-📊 Stand out in social feeds
-🎯 Drive traffic to your job posts
-⏱️ Create in under 2 minutes
-🔄 Easy to update and reshare
-Keep your posts & applications on your preferred platform!`;
-    document.getElementById('requirements').value = 
-`How It Works:
-1. Enter your job details
-2. Add your company branding
-3. Download your teaser
-4. Share anywhere!`;
-    document.getElementById('benefits').value = 
-`Start Creating Now!
-🆓 Always free to use
-💻 Works on any device
-🎨 Automatic color matching
-📱 Mobile-optimized
-🔗 Link to any job post
-Download your teasers & share everywhere!`;
-    
-    updatePreview();
-}
-
-        document.getElementById('jobForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            updatePreview();
-        });
-
-        document.getElementById('downloadButton').addEventListener('click', downloadTeaser);
-        document.addEventListener('DOMContentLoaded', function() {
-    console.log('DOM loaded');
-    
-    // Set up prefill button handler
-    const prefillButton = document.getElementById('prefillButton');
-    if (prefillButton) {
-        console.log('Found prefill button');
-        prefillButton.onclick = function() {
-            console.log('Prefill clicked');
-            prefillForm();
-        }
-    } else {
-        console.log('Prefill button not found');
-    }
-});
-    
-    </script>
-</body>
-</html>
-
-
+export default ContentTeaser;
