@@ -3,260 +3,812 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Content Teaser with Image Upload</title>
+    <title>iTabs 👍i Creator</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 20px;
-            background-color: #f0f8ff;
+        /* Base Styles */
+        :root {
+            --primary-color: #4361ee;
+            --secondary-color: #3651d4;
+            --light-bg: #f8f9fa;
+            --border-color: #e2e8f0;
+            --text-dark: #2d3748;
+            --text-medium: #4a5568;
+            --text-light: #718096;
+            --success-color: #38a169;
+            --danger-color: #e53e3e;
         }
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-        .header {
-            background: #0056b3;
-            color: white;
-            padding: 20px;
-            border-radius: 8px 8px 0 0;
-            display: flex;
-            align-items: center;
-            gap: 20px;
-        }
-        .logo-container {
-            width: 100px;
-            height: 100px;
-            background: white;
-            border-radius: 8px;
-            padding: 10px;
-        }
-        .logo-preview {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-        }
-        .upload-section {
-            margin: 20px;
-            padding: 20px;
-            border: 2px dashed #ccc;
-            border-radius: 8px;
-        }
-        .upload-button {
-            background: #0056b3;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 4px;
-            cursor: pointer;
-            margin: 10px 0;
-        }
-        .preview-section {
-            margin: 20px;
-        }
-        .preview-image {
-            max-width: 100%;
-            max-height: 300px;
-            display: none;
-            margin-top: 10px;
-        }
-        .status-message {
-            margin-top: 10px;
-            padding: 10px;
-            border-radius: 4px;
-        }
-        .success {
-            background: #d4edda;
-            color: #155724;
-        }
-        .error {
-            background: #f8d7da;
-            color: #721c24;
-        }
-        .url-input {
-            width: 100%;
-            padding: 8px;
-            margin-top: 10px;
+        
+        * {
             box-sizing: border-box;
+            margin: 0;
+            padding: 0;
         }
-        .tabs {
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            line-height: 1.6;
+            color: var(--text-dark);
+            background-color: var(--light-bg);
+        }
+        
+        .teaser-container {
+            max-width: 800px;
+            margin: 20px auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        
+        .teaser-header {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
+            padding: 25px;
+            text-align: center;
+        }
+        
+        .teaser-title {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+        
+        .teaser-description {
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        /* Tabs Navigation */
+        .tabs-nav {
             display: flex;
-            border-bottom: 1px solid #ddd;
+            background-color: var(--light-bg);
+            border-bottom: 1px solid var(--border-color);
         }
-        .tab {
-            padding: 10px 20px;
-            cursor: pointer;
-            border: none;
+        
+        .tab-button {
+            padding: 15px 20px;
             background: none;
+            border: none;
+            border-bottom: 3px solid transparent;
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-light);
+            cursor: pointer;
+            transition: all 0.3s;
         }
-        .tab.active {
-            border-bottom: 2px solid #0056b3;
-            color: #0056b3;
+        
+        .tab-button:hover {
+            color: var(--text-medium);
         }
+        
+        .tab-button.active {
+            color: var(--primary-color);
+            background: white;
+            border-bottom-color: var(--primary-color);
+        }
+        
+        /* Tab Content */
         .tab-content {
-            padding: 20px;
             display: none;
+            padding: 25px;
+            animation: fadeIn 0.3s ease;
         }
+        
         .tab-content.active {
             display: block;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        /* Form Styling */
+        .form-container {
+            background-color: var(--light-bg);
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        
+        .form-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: var(--text-dark);
+        }
+        
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--text-medium);
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 16px;
+            transition: border 0.2s ease;
+        }
+        
+        .form-control:focus {
+            border-color: var(--primary-color);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.1);
+        }
+        
+        .color-picker {
+            height: 40px;
+            padding: 0;
+            cursor: pointer;
+        }
+        
+        .emoji-grid {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .emoji-option {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            background: white;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .emoji-option:hover {
+            transform: scale(1.1);
+            border-color: var(--primary-color);
+        }
+        
+        .emoji-option.selected {
+            background: #ebf4ff;
+            border-color: var(--primary-color);
+        }
+        
+        /* Buttons */
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--secondary-color);
+        }
+        
+        .btn-danger {
+            background-color: var(--danger-color);
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background-color: #c53030;
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        
+        /* Preview Box */
+        .preview-box {
+            padding: 20px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            background-color: white;
+            margin-top: 20px;
+            text-align: center;
+        }
+        
+        .preview-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: var(--text-dark);
+        }
+        
+        /* Live Widget Preview Styles */
+        .widget-preview {
+            position: relative;
+            margin: 0 auto;
+            display: inline-block;
+        }
+        
+        /* 👍i Widget Styles */
+        .thumbs-widget {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .thumbs-button {
+            width: 70px;
+            height: 70px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            cursor: pointer;
+            position: relative;
+        }
+        
+        .i-indicator {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 28px;
+            height: 28px;
+            background: var(--primary-color);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            font-style: italic;
+            font-weight: bold;
+        }
+        
+        /* Live Preview Widget */
+        .live-preview-container {
+            position: relative;
+            width: 100%;
+            height: 300px;
+            background: #f0f5ff;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid #e0e7ff;
+            margin-bottom: 20px;
+        }
+        
+        .live-preview-content {
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .live-preview-title {
+            font-size: 20px;
+            margin-bottom: 10px;
+            color: var(--text-dark);
+        }
+        
+        .live-preview-text {
+            color: var(--text-medium);
+            max-width: 500px;
+            margin: 0 auto 20px;
+        }
+        
+        #demo-widget {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+        }
+        
+        /* Reaction Options */
+        .thumbs-popup {
+            position: absolute;
+            bottom: 80px;
+            right: 0;
+            background: white;
+            width: 300px;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            z-index: 1000;
+            display: none;
+        }
+        
+        .popup-title {
+            font-weight: 600;
+            margin-bottom: 15px;
+            font-size: 16px;
+        }
+        
+        .reaction-option {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            margin-bottom: 8px;
+            background: var(--light-bg);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .reaction-option:hover {
+            background: #e9ecef;
+            transform: translateY(-2px);
+        }
+        
+        .reaction-emoji {
+            font-size: 24px;
+            margin-right: 10px;
+        }
+        
+        .popup-close {
+            text-align: center;
+            color: var(--primary-color);
+            margin-top: 10px;
+            cursor: pointer;
+            font-weight: 500;
+        }
+        
+        /* Thank You Message Popup */
+        .thanks-popup {
+            position: absolute;
+            bottom: 80px;
+            right: 0;
+            background: white;
+            width: 300px;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            z-index: 1000;
+            display: none;
+            text-align: center;
+        }
+        
+        .thanks-emoji {
+            font-size: 48px;
+            margin-bottom: 10px;
+            display: inline-block;
+            animation: bounce 1s infinite;
+        }
+        
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
+            40% {transform: translateY(-20px);}
+            60% {transform: translateY(-10px);}
+        }
+        
+        .thanks-title {
+            font-weight: 600;
+            margin-bottom: 10px;
+            font-size: 18px;
+        }
+        
+        .thanks-message {
+            color: var(--text-medium);
+            margin-bottom: 15px;
+        }
+        
+        /* Code Generator Section */
+        .code-container {
+            margin-top: 20px;
+        }
+        
+        .code-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .code-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+        
+        .copy-btn {
+            background: var(--success-color);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        
+        .copy-btn:hover {
+            background: #2f855a;
+        }
+        
+        .code-preview {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: monospace;
+            font-size: 14px;
+            line-height: 1.5;
+            overflow-x: auto;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        
+        /* Toast Message */
+        .toast {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0,0,0,0.8);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 4px;
+            z-index: 1000;
+            display: none;
+        }
+        
+        /* Message Box */
+        .message-box {
+            background: #f0f9ff;
+            border-left: 4px solid var(--primary-color);
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 0 6px 6px 0;
+        }
+        
+        .message-title {
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: var(--text-dark);
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .emoji-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+            
+            .tab-button {
+                padding: 10px 15px;
+                font-size: 14px;
+            }
+            
+            .teaser-container {
+                margin: 10px;
+            }
+            
+            .button-group {
+                flex-direction: column;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <div class="logo-container">
-                <img id="logoPreview" class="logo-preview" src="placeholder.png" alt="Logo">
+    <div class="teaser-container">
+        <div class="teaser-header">
+            <h1 class="teaser-title">iTabs 👍i Creator</h1>
+            <p class="teaser-description">Create your own customized 👍i widgets with thank you messages in minutes - no coding required!</p>
+        </div>
+        
+        <div class="tabs-nav">
+            <button class="tab-button active" onclick="switchTab('create')">Create Widget</button>
+            <button class="tab-button" onclick="switchTab('messages')">Thank You Messages</button>
+            <button class="tab-button" onclick="switchTab('preview')">Preview</button>
+            <button class="tab-button" onclick="switchTab('code')">Get Code</button>
+        </div>
+        
+        <!-- Create Widget Tab -->
+        <div id="create-tab" class="tab-content active">
+            <div class="form-container">
+                <h2 class="form-title">Design Your Widget</h2>
+                
+                <div class="form-grid">
+                    <div>
+                        <div class="form-group">
+                            <label class="form-label">Main Emoji</label>
+                            <div class="emoji-grid">
+                                <div class="emoji-option selected" onclick="selectMainEmoji(this)">👍</div>
+                                <div class="emoji-option" onclick="selectMainEmoji(this)">❤️</div>
+                                <div class="emoji-option" onclick="selectMainEmoji(this)">🔥</div>
+                                <div class="emoji-option" onclick="selectMainEmoji(this)">😊</div>
+                                <div class="emoji-option" onclick="selectMainEmoji(this)">⭐</div>
+                                <div class="emoji-option" onclick="selectCustomEmoji()">+</div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Indicator Symbol</label>
+                            <div class="emoji-grid">
+                                <div class="emoji-option selected" onclick="selectIndicator(this)">i</div>
+                                <div class="emoji-option" onclick="selectIndicator(this)">+</div>
+                                <div class="emoji-option" onclick="selectIndicator(this)">?</div>
+                                <div class="emoji-option" onclick="selectIndicator(this)">!</div>
+                                <div class="emoji-option" onclick="selectIndicator(this)">•</div>
+                                <div class="emoji-option" onclick="selectCustomIndicator()">+</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <div class="form-group">
+                            <label class="form-label">Widget Title</label>
+                            <input type="text" class="form-control" id="widget-title" value="What do you think?" placeholder="Enter widget title">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Button Size (pixels)</label>
+                            <input type="number" class="form-control" id="button-size" value="70" min="40" max="100">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Thank You Display Time (seconds)</label>
+                            <input type="number" class="form-control" id="thanks-duration" value="3" min="1" max="10">
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <div class="form-group">
+                            <label class="form-label">Main Button Color</label>
+                            <input type="color" class="form-control color-picker" id="main-color" value="#ffffff">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Indicator Color</label>
+                            <input type="color" class="form-control color-picker" id="indicator-color" value="#4361ee">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Widget Position</label>
+                            <select class="form-control" id="widget-position">
+                                <option value="bottom-right">Bottom Right</option>
+                                <option value="bottom-left">Bottom Left</option>
+                                <option value="top-right">Top Right</option>
+                                <option value="top-left">Top Left</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Reaction Options (one per line, emoji first)</label>
+                    <textarea class="form-control" id="reaction-options" rows="5" placeholder="Enter reaction options, one per line">👍 This is helpful
+❤️ I love this
+🔥 This is amazing
+💡 Very informative</textarea>
+                </div>
+                
+                <div class="button-group">
+                    <button class="btn btn-primary" onclick="updateWidget()">Update Widget</button>
+                    <button class="btn btn-danger" onclick="resetWidget()">Reset to Default</button>
+                    <button class="btn btn-primary" onclick="switchTab('messages')">Next: Thank You Messages</button>
+                </div>
             </div>
-            <div>
-                <h1>Content Teaser</h1>
-                <p>Upload and preview your content</p>
+            
+            <div class="preview-box">
+                <h3 class="preview-title">Live Preview</h3>
+                <div class="widget-preview">
+                    <div id="preview-button" class="thumbs-button" style="width: 70px; height: 70px;">
+                        👍
+                        <div id="preview-indicator" class="i-indicator">i</div>
+                    </div>
+                </div>
             </div>
         </div>
-
-
-
-
-
-Here's Part 2 - add this right after Part 1:
-
-```html
-        <!-- Upload Sections -->
-        <div class="upload-section">
-            <h2>Logo Upload</h2>
-            <input type="file" id="logoInput" accept="image/*" style="display: none;">
-            <button class="upload-button" onclick="document.getElementById('logoInput').click()">
-                📷 Select Logo
-            </button>
-            <input type="text" id="logoUrlInput" class="url-input" readonly placeholder="Logo URL will appear here">
-            <div id="logoStatus" class="status-message"></div>
+        
+        <!-- Thank You Messages Tab -->
+        <div id="messages-tab" class="tab-content">
+            <div class="form-container">
+                <h2 class="form-title">Customize Thank You Messages</h2>
+                <p>Personalize the messages that appear after a user selects a specific reaction.</p>
+                
+                <div id="thankyou-container">
+                    <!-- Reaction 1 -->
+                    <div class="form-group" style="border: 1px solid #e2e8f0; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+                        <h3 style="margin-bottom: 15px; display: flex; align-items: center;">
+                            <span style="font-size: 24px; margin-right: 10px;" id="emoji-reaction1">👍</span>
+                            <span id="text-reaction1">This is helpful</span>
+                        </h3>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Title</label>
+                            <input type="text" class="form-control" id="title-reaction1" value="Thank you!">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Message</label>
+                            <input type="text" class="form-control" id="message-reaction1" value="We're glad you found this helpful.">
+                        </div>
+                    </div>
+                    
+                    <!-- Reaction 2 -->
+                    <div class="form-group" style="border: 1px solid #e2e8f0; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+                        <h3 style="margin-bottom: 15px; display: flex; align-items: center;">
+                            <span style="font-size: 24px; margin-right: 10px;" id="emoji-reaction2">❤️</span>
+                            <span id="text-reaction2">I love this</span>
+                        </h3>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Title</label>
+                            <input type="text" class="form-control" id="title-reaction2" value="Thanks for the love!">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Message</label>
+                            <input type="text" class="form-control" id="message-reaction2" value="We're thrilled that you love this content.">
+                        </div>
+                    </div>
+                    
+                    <!-- Reaction 3 -->
+                    <div class="form-group" style="border: 1px solid #e2e8f0; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+                        <h3 style="margin-bottom: 15px; display: flex; align-items: center;">
+                            <span style="font-size: 24px; margin-right: 10px;" id="emoji-reaction3">🔥</span>
+                            <span id="text-reaction3">This is amazing</span>
+                        </h3>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Title</label>
+                            <input type="text" class="form-control" id="title-reaction3" value="You're awesome!">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Message</label>
+                            <input type="text" class="form-control" id="message-reaction3" value="Thanks for letting us know this content is amazing.">
+                        </div>
+                    </div>
+                    
+                    <!-- Reaction 4 -->
+                    <div class="form-group" style="border: 1px solid #e2e8f0; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+                        <h3 style="margin-bottom: 15px; display: flex; align-items: center;">
+                            <span style="font-size: 24px; margin-right: 10px;" id="emoji-reaction4">💡</span>
+                            <span id="text-reaction4">Very informative</span>
+                        </h3>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Title</label>
+                            <input type="text" class="form-control" id="title-reaction4" value="Knowledge is power!">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Message</label>
+                            <input type="text" class="form-control" id="message-reaction4" value="We're happy you found this information valuable.">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="button-group">
+                    <button class="btn btn-primary" onclick="updateThankYouMessages()">Update Messages</button>
+                    <button class="btn btn-primary" onclick="switchTab('preview')">Next: Preview Widget</button>
+                </div>
+            </div>
         </div>
-
-        <div class="upload-section">
-            <h2>Content Image/GIF Upload</h2>
-            <input type="file" id="contentInput" accept="image/*" style="display: none;">
-            <button class="upload-button" onclick="document.getElementById('contentInput').click()">
-                📷 Select Content Image
-            </button>
-            <input type="text" id="contentUrlInput" class="url-input" readonly placeholder="Content URL will appear here">
-            <img id="contentPreview" class="preview-image">
-            <div id="contentStatus" class="status-message"></div>
+        
+        <!-- Preview Tab -->
+        <div id="preview-tab" class="tab-content">
+            <h2>Live Widget Preview</h2>
+            <p>Click the button in the bottom right corner to see your widget in action.</p>
+            
+            <div class="live-preview-container">
+                <div class="live-preview-content">
+                    <h3 class="live-preview-title">Demo Area</h3>
+                    <p class="live-preview-text">This is a simulated webpage environment. Try clicking on the 👍i button to see your widget in action.</p>
+                </div>
+                
+                <div id="demo-widget" class="thumbs-widget">
+                    <div id="demo-button" class="thumbs-button" onclick="toggleReactionsPopup()">
+                        👍
+                        <div id="demo-indicator" class="i-indicator">i</div>
+                    </div>
+                    
+                    <div id="demo-reactions" class="thumbs-popup">
+                        <div id="demo-popup-title" class="popup-title">What do you think?</div>
+                        
+                        <div class="reaction-option" onclick="showThankYou(1)">
+                            <span id="demo-emoji-1" class="reaction-emoji">👍</span> 
+                            <span id="demo-text-1">This is helpful</span>
+                        </div>
+                        
+                        <div class="reaction-option" onclick="showThankYou(2)">
+                            <span id="demo-emoji-2" class="reaction-emoji">❤️</span> 
+                            <span id="demo-text-2">I love this</span>
+                        </div>
+                        
+                        <div class="reaction-option" onclick="showThankYou(3)">
+                            <span id="demo-emoji-3" class="reaction-emoji">🔥</span> 
+                            <span id="demo-text-3">This is amazing</span>
+                        </div>
+                        
+                        <div class="reaction-option" onclick="showThankYou(4)">
+                            <span id="demo-emoji-4" class="reaction-emoji">💡</span> 
+                            <span id="demo-text-4">Very informative</span>
+                        </div>
+                        
+                        <div class="popup-close" onclick="closeAllPopups()">Close</div>
+                    </div>
+                    
+                    <div id="demo-thanks" class="thanks-popup">
+                        <div id="demo-thanks-emoji" class="thanks-emoji">👍</div>
+                        <div id="demo-thanks-title" class="thanks-title">Thank you!</div>
+                        <div id="demo-thanks-message" class="thanks-message">We're glad you found this helpful.</div>
+                        <div class="popup-close" onclick="closeAllPopups()">Close</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="message-box">
+                <div class="message-title">How to interact with the preview:</div>
+                <ol>
+                    <li>Click the 👍i button to open the reactions popup</li>
+                    <li>Select a reaction to see the thank you message</li>
+                    <li>The thank you message will automatically close after the configured duration</li>
+                </ol>
+            </div>
+            
+            <div class="button-group">
+                <button class="btn btn-primary" onclick="updatePreview()">Update Preview</button>
+                <button class="btn btn-primary" onclick="switchTab('code')">Next: Get Code</button>
+            </div>
         </div>
-
-        <!-- Tabs Section -->
-        <div class="tabs">
-            <button class="tab active" onclick="switchTab('about')">About</button>
-            <button class="tab" onclick="switchTab('preview')">Preview</button>
-        </div>
-
-        <div id="aboutTab" class="tab-content active">
-            <h3>About Your Content</h3>
-            <p>This is where your content description will go.</p>
-        </div>
-
-        <div id="previewTab" class="tab-content">
-            <h3>Content Preview</h3>
-            <div id="previewContent"></div>
+        
+        <!-- Code Tab -->
+        <div id="code-tab" class="tab-content">
+            <h2>Get Your Widget Code</h2>
+            <p>Copy the code below and paste it into your website to add your customized 👍i widget with thank you messages.</p>
+            
+            <div class="code-container">
+                <div class="code-header">
+                    <div class="code-title">All-in-One Widget Code</div>
+                    <button class="copy-btn" onclick="copyCode()">Copy Code</button>
+                </div>
+                <pre class="code-preview" id="generated-code">// Loading your code...</pre>
+            </div>
+            
+            <div class="message-box">
+                <div class="message-title">Installation Instructions:</div>
+                <ol>
+                    <li>Copy the code above using the "Copy Code" button</li>
+                    <li>Paste it anywhere within the &lt;body&gt; tag of your HTML page</li>
+                    <li>That's it! The widget will appear in the selected position on your webpage</li>
+                </ol>
+            </div>
         </div>
     </div>
+    
+    <div id="toast" class="toast"></div>
 
     <script>
-        const API_KEY = '59cd5b2935b5b01bc744b5b0a1d26ee0'; // Your ImgBB API key
-
-        // Handle file uploads
-        async function uploadToImgBB(file, type) {
-            const formData = new FormData();
-            formData.append('image', file);
-
-            const statusElement = document.getElementById(`${type}Status`);
-            const urlInput = document.getElementById(`${type}UrlInput`);
-            
-            try {
-                statusElement.innerHTML = 'Uploading...';
-                statusElement.className = 'status-message';
-
-                const response = await fetch(`https://api.imgbb.com/1/upload?key=${API_KEY}`, {
-                    method: 'POST',
-                    body: formData
-                });
-
-                const data = await response.json();
-
-                if (data.success) {
-                    statusElement.innerHTML = 'Upload successful!';
-                    statusElement.className = 'status-message success';
-                    urlInput.value = data.data.url;
-
-                    // Update preview
-                    if (type === 'logo') {
-                        document.getElementById('logoPreview').src = data.data.url;
-                    } else {
-                        const contentPreview = document.getElementById('contentPreview');
-                        contentPreview.src = data.data.url;
-                        contentPreview.style.display = 'block';
-                    }
-                } else {
-                    throw new Error('Upload failed');
-                }
-            } catch (error) {
-                statusElement.innerHTML = 'Upload failed. Please try again.';
-                statusElement.className = 'status-message error';
-            }
-        }
-
-        // Add event listeners for file inputs
-        document.getElementById('logoInput').addEventListener('change', (event) => {
-            const file = event.target.files[0];
-            if (file) {
-                uploadToImgBB(file, 'logo');
-            }
-        });
-
-        document.getElementById('contentInput').addEventListener('change', (event) => {
-            const file = event.target.files[0];
-            if (file) {
-                uploadToImgBB(file, 'content');
-            }
-        });
-
-        // Tab switching functionality
-        function switchTab(tabName) {
-            // Hide all tabs
-            document.querySelectorAll('.tab-content').forEach(tab => {
-                tab.classList.remove('active');
-            });
-            document.querySelectorAll('.tab').forEach(tab => {
-                tab.classList.remove('active');
-            });
-
-            // Show selected tab
-            document.getElementById(`${tabName}Tab`).classList.add('active');
-            document.querySelector(`[onclick="switchTab('${tabName}')"]`).classList.add('active');
-        }
-
-        // Initialize preview update
-        function updatePreview() {
-            const logoUrl = document.getElementById('logoUrlInput').value;
-            const contentUrl = document.getElementById('contentUrlInput').value;
-            
-            let previewHtml = `
-                <div style="text-align: center;">
-                    ${logoUrl ? `<img src="${logoUrl}" style="max-width: 100px; margin-bottom: 20px;">` : ''}
-                    <h3>Your Content</h3>
-                    ${contentUrl ? `<img src="${contentUrl}" style="max-width: 100%; margin-top: 20px;">` : ''}
-                </div>
-            `;
-            
-            document.getElementById('previewContent').innerHTML = previewHtml;
-        }
-
-        // Update preview when URLs change
-        document.getElementById('logoUrlInput').addEventListener('change', updatePreview);
-        document.getElementById('contentUrlInput').addEventListener('change', updatePreview);
-    </script>
-</body>
-</html>
-
+        // Widget configuration object
+        let widgetConfig = {
+            mainEmoji: "👍",
+            indicator: "i",
+            title: "What do you think?",
+            buttonSize: 70,
+            thanksDuration: 3,
+            mainColor: "#ffffff",
+            indicatorColor: "#4361ee",
+            position: "bottom-right",
+            reactions: [
+                { emoji: "👍", text: "This is helpful", title: "Thank you!", message: "We
